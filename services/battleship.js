@@ -1,10 +1,17 @@
 class BattleShip {
   constructor(ships, boardSize = 10) {
+    const errors = [];
     if (ships.length < 1) {
-      throw new Error('Must have at least one ship');
+      errors.push('Must have at least one ship');
     }
     if (typeof boardSize !== 'number') {
-      throw new Error('Expect number to board size');
+      errors.push('Expect number to board size');
+    }
+    if (boardSize < 1) {
+      errors.push('Board size must be at least 1');
+    }
+    if (errors.length > 0) {
+      throw new Error(errors.join('. '));
     }
     this.board = [];
     this.locations = {};

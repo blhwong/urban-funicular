@@ -58,6 +58,7 @@ describe('Battleship service', () => {
 
     it('will error if bad board size', () => {
       expect(() => new BattleShipService(ships, 'x')).to.throw('Expect number');
+      expect(() => new BattleShipService(ships, 0)).to.throw('Board size must be at least 1');
     });
   });
 
