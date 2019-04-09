@@ -4,6 +4,9 @@ class BattleShip {
   }
 
   constructor(ships, boardSize = 10) {
+    if (ships.length < 1) {
+      throw new Error('Must have at least one ship');
+    }
     this.board = [];
     this.locations = {};
     this.shipsLeft = ships.length;

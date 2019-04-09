@@ -35,25 +35,25 @@ describe('Battleship service', () => {
       ]);
     });
 
-    it('will error on bad board inputs', () => {
-      // TODO: implement me
-      const board1 = [
-        [
-          [-1, 0],
-        ],
-      ];
-      const board2 = [
-        [
-          [1, 1],
-          [2, 1],
-        ],
-        [
-          [2, 1],
-        ],
-      ];
+    it('will error on no ships', () => {
+      expect(() => new BattleShipService([])).to.throw();
+    });
 
-      expect(() => new BattleShipService(board1)).to.throw();
-      expect(() => new BattleShipService(board2)).to.throw();
+    it('will error when ships are colliding', () => {
+      const collidingShips = [
+        new Ship(4, 0, 10, 'horizontal'),
+        new Ship(0, 4, 10, 'vertical'),
+      ];
+      expect(() => new BattleShipService(collidingShips)).to.throw();
+    });
+
+    it('will error when ships are out of bounds', () => {
+      const longShips = [
+        new Ship(0, 0, 11, 'horizontal'),
+        new Ship(1, 5, 10, 'vertical'),
+      ];
+      expect(() => new BattleShipService(longShips)).to.throw();
+      expect(() => new BattleShipService(longShips, 11)).not.to.throw();
     });
   });
 
