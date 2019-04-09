@@ -1,29 +1,56 @@
 const { expect } = require('chai');
 const BattleShipService = require('../../services/battleship');
+const Ship = require('../../models/ship');
 
 describe('Battleship service', () => {
-  const board = [
-    ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
-    ['.', 'S', '.', '.', '.', '.', '.', '.', '.', 'S'],
-    ['.', 'S', '.', 'S', '.', '.', '.', '.', '.', 'S'],
-    ['.', '.', '.', '.', '.', '.', '.', '.', '.', 'S'],
-    ['.', '.', '.', 'S', 'S', '.', '.', 'S', '.', 'S'],
-    ['.', '.', '.', '.', '.', '.', '.', 'S', '.', 'S'],
-    ['.', '.', 'S', 'S', 'S', '.', '.', 'S', '.', '.'],
-    ['.', '.', '.', '.', '.', '.', '.', 'S', '.', '.'],
-    ['.', 'S', '.', '.', '.', '.', '.', '.', '.', '.'],
-    ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
-  ];
+  let ships = [];
+
+  beforeEach(() => {
+    ships = [
+      new Ship(1, 1, 2, 'vertical'),
+      new Ship(2, 3, 1),
+      new Ship(4, 3, 2, 'horizontal'),
+      new Ship(6, 2, 3, 'horizontal'),
+      new Ship(8, 1, 1),
+      new Ship(4, 7, 4, 'vertical'),
+      new Ship(1, 9, 5, 'vertical'),
+    ];
+  });
+
 
   describe('constructor', () => {
     it('can create a board', () => {
-      const b = new BattleShipService(board);
-      expect(b.board).to.deep.equal(board);
+      const b = new BattleShipService(ships);
+      expect(b.board).to.deep.equal([
+        ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
+        ['.', 'S', '.', '.', '.', '.', '.', '.', '.', 'S'],
+        ['.', 'S', '.', 'S', '.', '.', '.', '.', '.', 'S'],
+        ['.', '.', '.', '.', '.', '.', '.', '.', '.', 'S'],
+        ['.', '.', '.', 'S', 'S', '.', '.', 'S', '.', 'S'],
+        ['.', '.', '.', '.', '.', '.', '.', 'S', '.', 'S'],
+        ['.', '.', 'S', 'S', 'S', '.', '.', 'S', '.', '.'],
+        ['.', '.', '.', '.', '.', '.', '.', 'S', '.', '.'],
+        ['.', 'S', '.', '.', '.', '.', '.', '.', '.', '.'],
+        ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
+      ]);
     });
 
     it('will error on bad board inputs', () => {
-      const board1 = [];
-      const board2 = [[], []];
+      // TODO: implement me
+      const board1 = [
+        [
+          [-1, 0],
+        ],
+      ];
+      const board2 = [
+        [
+          [1, 1],
+          [2, 1],
+        ],
+        [
+          [2, 1],
+        ],
+      ];
 
       expect(() => new BattleShipService(board1)).to.throw();
       expect(() => new BattleShipService(board2)).to.throw();
@@ -34,7 +61,7 @@ describe('Battleship service', () => {
     let b;
 
     beforeEach(() => {
-      b = new BattleShipService(board);
+      b = new BattleShipService(ships);
     });
 
     it('will miss', () => {
@@ -62,7 +89,7 @@ describe('Battleship service', () => {
 
     it('will win', () => {
       expect(b.attackAt(1, 1)).to.equal('Hit');
-      expect(b.attackAt(1, 2)).to.equal('Sunk');
+      expect(b.attackAt(2, 1)).to.equal('Sunk');
 
       expect(b.attackAt(2, 3)).to.equal('Sunk');
 
