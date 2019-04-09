@@ -1,3 +1,5 @@
+const handleErrors = require('../util/handleErrors');
+
 class BattleShip {
   constructor(ships, boardSize = 10) {
     const errors = [];
@@ -10,9 +12,8 @@ class BattleShip {
     if (boardSize < 1) {
       errors.push('Board size must be at least 1');
     }
-    if (errors.length > 0) {
-      throw new Error(errors.join('. '));
-    }
+    handleErrors(errors);
+
     this.board = [];
     this.locations = {};
     this.shipsLeft = ships.length;
@@ -34,9 +35,8 @@ class BattleShip {
     if (col < 0 || col >= this.board[0].length) {
       errors.push('Column out of bounds');
     }
-    if (errors.length > 0) {
-      throw new Error(errors.join('. '));
-    }
+    handleErrors(errors);
+
     return `[${row}, ${col}]`;
   }
 

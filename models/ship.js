@@ -1,3 +1,5 @@
+const handleErrors = require('../util/handleErrors');
+
 class Ship {
   constructor(row, col, size, direction) {
     const errors = [];
@@ -19,9 +21,8 @@ class Ship {
     if (col < 0) {
       errors.push('Column out of bounds');
     }
-    if (errors.length > 0) {
-      throw new Error(errors.join('. '));
-    }
+    handleErrors(errors);
+
     this.row = row;
     this.col = col;
     this.size = size;
