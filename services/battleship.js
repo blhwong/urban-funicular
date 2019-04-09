@@ -4,15 +4,19 @@ class BattleShip {
   }
 
   constructor(ships, boardSize = 10) {
+    this.board = [];
+    this.locations = {};
+    this.shipsLeft = ships.length;
+
+    this.initializeBoard(ships, boardSize);
+  }
+
+  initializeBoard(ships, boardSize) {
     const emptySpace = '.';
     const cols = [];
     for (let i = 0; i < boardSize; i += 1) {
       cols.push(emptySpace);
     }
-
-    this.board = [];
-    this.locations = {};
-    this.shipsLeft = ships.length;
 
     for (let i = 0; i < boardSize; i += 1) {
       this.board.push([...cols]);
@@ -42,28 +46,33 @@ class BattleShip {
   }
 
   attackAt(row, col) {
-    if (this.board[row][col] === '.') {
-      this.board[row][col] = 'A';
-      return 'Miss';
+    const curr = this.board[row][col];
+    const location = BattleShip.getLocation(row, col);
+
+    if (curr !== 'A' && curr !== '.' && curr !== 'S') {
+      throw new Error(`Invalid value ${curr} found at ${location}`);
     }
-    if (this.board[row][col] === 'S') {
-      this.board[row][col] = 'A';
-      const location = BattleShip.getLocation(row, col);
-      const ship = this.locations[location];
-      ship.hit();
-      if (ship.isSunk()) {
-        this.shipsLeft -= 1;
-        if (!this.shipsLeft) {
-          return 'Win';
-        }
-        return 'Sunk';
-      }
-      return 'Hit';
-    }
-    if (this.board[row][col] === 'A') {
+
+    if (curr === 'A') {
       return 'Already Attacked';
     }
-    return '';
+
+    this.board[row][col] = 'A';
+
+    if (curr === '.') {
+      return 'Miss';
+    }
+
+    const ship = this.locations[location];
+    ship.hit();
+    if (ship.isSunk()) {
+      this.shipsLeft -= 1;
+      if (!this.shipsLeft) {
+        return 'Win';
+      }
+      return 'Sunk';
+    }
+    return 'Hit';
   }
 }
 
