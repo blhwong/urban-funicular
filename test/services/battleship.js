@@ -70,10 +70,16 @@ describe('Battleship service', () => {
 
     it('will miss', () => {
       expect(b.attackAt(0, 0)).to.equal('Miss');
+      expect(b.attackAt(0, 1)).to.equal('Miss');
+      expect(b.attackAt(0, 2)).to.equal('Miss');
+      expect(b.attackAt(0, 3)).to.equal('Miss');
     });
 
     it('will hit', () => {
       expect(b.attackAt(1, 1)).to.equal('Hit');
+      expect(b.attackAt(6, 2)).to.equal('Hit');
+      expect(b.attackAt(4, 4)).to.equal('Hit');
+      expect(b.attackAt(1, 9)).to.equal('Hit');
     });
 
     it('will be sunk', () => {
@@ -81,6 +87,8 @@ describe('Battleship service', () => {
 
       expect(b.attackAt(1, 1)).to.equal('Hit');
       expect(b.attackAt(2, 1)).to.equal('Sunk');
+
+      expect(b.attackAt(8, 1)).to.equal('Sunk');
     });
 
     it('will be already attacked', () => {
