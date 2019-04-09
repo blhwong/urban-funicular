@@ -1,17 +1,36 @@
 class BattleShip {
-  static getLocation(row, col) {
-    return `[${row}, ${col}]`;
-  }
-
   constructor(ships, boardSize = 10) {
     if (ships.length < 1) {
       throw new Error('Must have at least one ship');
+    }
+    if (typeof boardSize !== 'number') {
+      throw new Error('Expect number to board size');
     }
     this.board = [];
     this.locations = {};
     this.shipsLeft = ships.length;
 
     this.initializeBoard(ships, boardSize);
+  }
+
+  getLocation(row, col) {
+    const errors = [];
+    if (typeof row !== 'number') {
+      errors.push('Expect number to input row');
+    }
+    if (typeof col !== 'number') {
+      errors.push('Expect number to input column');
+    }
+    if (row < 0 || row >= this.board.length) {
+      errors.push('Row out of bounds');
+    }
+    if (col < 0 || col >= this.board[0].length) {
+      errors.push('Column out of bounds');
+    }
+    if (errors.length > 0) {
+      throw new Error(errors.join('. '));
+    }
+    return `[${row}, ${col}]`;
   }
 
   initializeBoard(ships, boardSize) {
@@ -29,7 +48,7 @@ class BattleShip {
       let { row, col } = ship;
       let count = 0;
       do {
-        const location = BattleShip.getLocation(row, col);
+        const location = this.getLocation(row, col);
         this.locations[location] = ship;
         if (this.board[row][col] === 'S') {
           throw new Error(`Location ${location} is colliding with another ship!`);
@@ -49,8 +68,8 @@ class BattleShip {
   }
 
   attackAt(row, col) {
+    const location = this.getLocation(row, col);
     const curr = this.board[row][col];
-    const location = BattleShip.getLocation(row, col);
 
     if (curr !== 'A' && curr !== '.' && curr !== 'S') {
       throw new Error(`Invalid value ${curr} found at ${location}`);

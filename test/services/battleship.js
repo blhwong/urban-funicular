@@ -36,7 +36,7 @@ describe('Battleship service', () => {
     });
 
     it('will error on no ships', () => {
-      expect(() => new BattleShipService([])).to.throw();
+      expect(() => new BattleShipService([])).to.throw('Must have at least one ship');
     });
 
     it('will error when ships are colliding', () => {
@@ -44,7 +44,7 @@ describe('Battleship service', () => {
         new Ship(4, 0, 10, 'horizontal'),
         new Ship(0, 4, 10, 'vertical'),
       ];
-      expect(() => new BattleShipService(collidingShips)).to.throw();
+      expect(() => new BattleShipService(collidingShips)).to.throw('colliding');
     });
 
     it('will error when ships are out of bounds', () => {
@@ -52,8 +52,12 @@ describe('Battleship service', () => {
         new Ship(0, 0, 11, 'horizontal'),
         new Ship(1, 5, 10, 'vertical'),
       ];
-      expect(() => new BattleShipService(longShips)).to.throw();
+      expect(() => new BattleShipService(longShips)).to.throw('out of bounds');
       expect(() => new BattleShipService(longShips, 11)).not.to.throw();
+    });
+
+    it('will error if bad board size', () => {
+      expect(() => new BattleShipService(ships, 'x')).to.throw('Expect number');
     });
   });
 
@@ -112,6 +116,35 @@ describe('Battleship service', () => {
       expect(b.attackAt(3, 9)).to.equal('Hit');
       expect(b.attackAt(4, 9)).to.equal('Hit');
       expect(b.attackAt(5, 9)).to.equal('Win');
+    });
+
+    it('will error on bad inputs', () => {
+      expect(() => b.attackAt(null, undefined)).to.throw('Expect number');
+      expect(() => b.attackAt(-1, 9)).to.throw('Row out of bounds');
+      expect(() => b.attackAt(10, 5)).to.throw('Row out of bounds');
+      expect(() => b.attackAt(5, -1)).to.throw('Column out of bounds');
+      expect(() => b.attackAt(5, 1000)).to.throw('Column out of bounds');
+      expect(() => b.attackAt('1', '6')).to.throw('Expect number');
+    });
+  });
+
+  describe('Battleship.getLocation', () => {
+    let b;
+
+    beforeEach(() => {
+      b = new BattleShipService(ships);
+    });
+
+    it('can get location key', () => {
+      const row = 1;
+      const col = 2;
+      expect(b.getLocation(row, col)).to.equal(`[${row}, ${col}]`);
+    });
+
+    it('will error on bad inputs', () => {
+      expect(() => b.getLocation()).to.throw('Expect number');
+      expect(() => b.getLocation(null, undefined)).to.throw('Expect number');
+      expect(() => b.getLocation('1', '2')).to.throw('Expect number');
     });
   });
 });
